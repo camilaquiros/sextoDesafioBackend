@@ -13,6 +13,7 @@ import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
 import { initializePassport } from './config/passport.js'
+import { validatePassword } from './utils/bcrypt.js'
 
 
 const app = express();
@@ -37,7 +38,7 @@ app.use(session({
 }))
 
 function auth(req,res,next) {
-    if(req.session.email == process.env.ADMIN_EMAIL && req.session.password == process.env.ADMIN_PASSWORD) {
+    if(req.user.rol === 'admin') {
         return next() //continua con la ejecución normal de la ruta
     }
     return res.send('No tenes acceso a este contenido')
